@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>Frontend microservice (accounts)</title>
+  <link rel="shortcut icon" href="favicon.png" type="image/png" />
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="container">
+    <img src="transparent-logo.png" class="center">
+
+    <h1>Frontend microservice (accounts)</h1>
+
+    <div id="entries">
+
+
+      <div class="entry">
+        <span id="version">
+          My version is {{ .AppVersion }} also available at <a href='version'>version</a>
+        </span>
+      </div>
+      <div class="entry">
+        <span id="backend">
+          I use a backend at <a href="http://{{ .BackendHost }}:{{ .BackendPort }}">{{ .BackendHost }}:{{ .BackendPort }}</a> Backend has version {{ .BackendVersion }}
+        </span>
+      </div>
+
+      <div class="entry">
+        <span id="endpoints">
+          <ul>
+            <li>Liveness endpoint is at <a href='health/live'>health/live</a></li>
+            <li>Readiness endpoint is at <a href='health/ready'>health/ready</a></li>
+          </ul>
+        </span>
+      </div>
+
+      <div class="entry">
+        <form method="post">
+           	Enter your account amount to see the interest. $<input name="account" type="number" value="{{ .LoanAmount }}">
+           	<input type="submit">
+           	</form>
+
+      </div>
+
+      <div class="entry">
+        <span id="finalAmount">
+          {{ .LoanResult }}
+
+        </span>
+
+      </div>
+
+      <div class="diagram">
+        <img src="diagram.svg" class="center">
+
+      </div>
+
+
+
+    </div>
+
+  </div>
+
+</body>
+
+</html>
