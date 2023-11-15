@@ -14,13 +14,13 @@ import (
 	"text/template"
 )
 
-type LoanApplication struct {
+type AccountApplication struct {
 	AppVersion     string
 	BackendVersion string
 	BackendHost    string
 	BackendPort    string
-	LoanAmount     int
-	LoanResult     string
+	AccountAmount     int
+	AccountResult     string
 }
 
 func main() {
@@ -30,26 +30,26 @@ func main() {
 		port = "8080"
 	}
 
-	loanApp := LoanApplication{}
+	accountApp := AccountApplication{}
 
-	loanApp.AppVersion = os.Getenv("APP_VERSION")
-	if len(loanApp.AppVersion) == 0 {
-		loanApp.AppVersion = "dev"
+	accountApp.AppVersion = os.Getenv("APP_VERSION")
+	if len(accountApp.AppVersion) == 0 {
+		accountApp.AppVersion = "dev"
 	}
 
-	loanApp.BackendHost = os.Getenv("BACKEND_HOST")
-	if len(loanApp.BackendHost) == 0 {
-		loanApp.BackendHost = "interest"
+	accountApp.BackendHost = os.Getenv("BACKEND_HOST")
+	if len(accountApp.BackendHost) == 0 {
+		accountApp.BackendHost = "interest"
 	}
 
-	loanApp.BackendPort = os.Getenv("BACKEND_PORT")
-	if len(loanApp.BackendPort) == 0 {
-		loanApp.BackendPort = "8080"
+	accountApp.BackendPort = os.Getenv("BACKEND_PORT")
+	if len(accountApp.BackendPort) == 0 {
+		accountApp.BackendPort = "8080"
 	}
 
 	// Allow anybody to retrieve version
 	http.HandleFunc("/version", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, loanApp.AppVersion)
+		fmt.Fprintln(w, accountApp.AppVersion)
 	})
 
 	// Kubernetes check if app is ok
@@ -62,21 +62,21 @@ func main() {
 		fmt.Fprintln(w, "yes")
 	})
 
-	http.HandleFunc("/", loanApp.serveFiles)
+	http.HandleFunc("/", accountApp.serveFiles)
 
-	fmt.Printf("Frontend version %s is listening now at port %s\n", loanApp.AppVersion, port)
+	fmt.Printf("Frontend version %s is listening now at port %s\n", accountApp.AppVersion, port)
 	err := http.ListenAndServe(":"+port, nil)
 	log.Fatal(err)
 }
 
-func (loanApp *LoanApplication) serveFiles(w http.ResponseWriter, r *http.Request) {
+func (accountApp *AccountApplication) serveFiles(w http.ResponseWriter, r *http.Request) {
 	upath := r.URL.Path
 	p := "." + upath
 	if p == "./" {
-		loanApp.home(w, r)
+		accountApp.home(w, r)
 		return
 	} else if p == "./diagram.svg" {
-		loanApp.showDiagram(w, r)
+		accountApp.showDiagram(w, r)
 		return
 	} else {
 		p = filepath.Join("./static/", path.Clean(upath))
@@ -84,20 +84,20 @@ func (loanApp *LoanApplication) serveFiles(w http.ResponseWriter, r *http.Reques
 	http.ServeFile(w, r, p)
 }
 
-func (loanApp *LoanApplication) findBackendVersion() {
-	version, err := loanApp.callBackend("version")
+func (accountApp *AccountApplication) findBackendVersion() {
+	version, err := accountApp.callBackend("version")
 	if err != nil {
 		log.Println("Interest error :", err)
 		version = "unknown"
 	}
 
-	loanApp.BackendVersion = version
+	accountApp.BackendVersion = version
 }
 
-func (loanApp *LoanApplication) home(w http.ResponseWriter, r *http.Request) {
+func (accountApp *AccountApplication) home(w http.ResponseWriter, r *http.Request) {
 
-	loanApp.findBackendVersion()
-	loanApp.handleFormSubmission(w, r)
+	accountApp.findBackendVersion()
+	accountApp.handleFormSubmission(w, r)
 
 	t, err := template.ParseFiles("./static/index.html")
 	if err != nil {
@@ -105,7 +105,7 @@ func (loanApp *LoanApplication) home(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Error parsing template: %v", err)
 		return
 	}
-	err = t.Execute(w, loanApp)
+	err = t.Execute(w, accountApp)
 	if err != nil {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		log.Printf("Error executing template: %v", err)
@@ -113,7 +113,7 @@ func (loanApp *LoanApplication) home(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (loanApp *LoanApplication) showDiagram(w http.ResponseWriter, r *http.Request) {
+func (accountApp *AccountApplication) showDiagram(w http.ResponseWriter, r *http.Request) {
 
 	t, err := template.ParseFiles("./static/diagram.svg")
 	if err != nil {
@@ -128,8 +128,8 @@ func (loanApp *LoanApplication) showDiagram(w http.ResponseWriter, r *http.Reque
 	}
 
 	versionsFound := versions{}
-	versionsFound.FV = loanApp.AppVersion
-	versionsFound.BV = loanApp.BackendVersion
+	versionsFound.FV = accountApp.AppVersion
+	versionsFound.BV = accountApp.BackendVersion
 
 	w.Header().Set("Content-Type", "image/svg+xml")
 	w.Header().Set("Accept-Ranges", "bytes")
@@ -142,59 +142,59 @@ func (loanApp *LoanApplication) showDiagram(w http.ResponseWriter, r *http.Reque
 	}
 }
 
-func (loanApp *LoanApplication) handleFormSubmission(w http.ResponseWriter, r *http.Request) {
-	loanAmount := parseLoanAmount(r)
-	loanApp.LoanAmount = loanAmount
-	if loanAmount == 0 {
+func (accountApp *AccountApplication) handleFormSubmission(w http.ResponseWriter, r *http.Request) {
+	accountAmount := parseAccountAmount(r)
+	accountApp.AccountAmount = accountAmount
+	if accountAmount == 0 {
 		return
 	}
 
 	quote := ""
-	interestFound, err := loanApp.callBackend("api/v1/interest")
+	interestFound, err := accountApp.callBackend("api/v1/interest")
 	if err != nil {
 		log.Println("Interest error :", err)
 		quote = "Could not get interest. Sorry!"
 	} else {
 		log.Println("Found interest rate " + interestFound)
 		interestConverted, _ := strconv.Atoi(interestFound)
-		quote = offerQuote(loanAmount, interestConverted)
+		quote = offerQuote(accountAmount, interestConverted)
 	}
-	loanApp.LoanResult = quote
+	accountApp.AccountResult = quote
 
 }
 
-func parseLoanAmount(r *http.Request) int {
+func parseAccountAmount(r *http.Request) int {
 
 	err := r.ParseForm() // Parses the request body
 	if err != nil {
 		return 0
 	}
 
-	loanPostParameter := r.Form.Get("loan") // x will be "" if parameter is not set
+	accountPostParameter := r.Form.Get("account") // x will be "" if parameter is not set
 
-	loanAmount, err := strconv.Atoi(loanPostParameter)
+	accountAmount, err := strconv.Atoi(accountPostParameter)
 	if err != nil {
 		return 0
 	}
-	return loanAmount
+	return accountAmount
 
 }
 
-func offerQuote(loan int, interest int) string {
-	if loan <= 0 {
+func offerQuote(account int, interest int) string {
+	if account <= 0 {
 		return ""
 	}
 
-	total := loan * interest / 100
+	total := account * interest / 100
 	return fmt.Sprintf("With rate %d%% you will pay  %d extra interest", interest, total)
 
 }
 
-func (loanApp *LoanApplication) callBackend(path string) (result string, err error) {
+func (accountApp *AccountApplication) callBackend(path string) (result string, err error) {
 
 	backendUrl := url.URL{
 		Scheme: "http",
-		Host:   loanApp.BackendHost + ":" + loanApp.BackendPort,
+		Host:   accountApp.BackendHost + ":" + accountApp.BackendPort,
 		Path:   path,
 	}
 
