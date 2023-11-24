@@ -1,2 +1,3 @@
 ord('A')
 type('hello')
+sum([1, 2, 3, 4])
