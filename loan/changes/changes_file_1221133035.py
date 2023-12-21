@@ -1,1 +1,2 @@
 list('Python')
+dir('hello')
