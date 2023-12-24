@@ -1,0 +1,4 @@
+bool(0)
+tuple((1, 2, 3))
+tuple((1, 2, 3))
+len('Hello')
