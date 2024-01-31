@@ -1,3 +1,3 @@
-module github.com/kostis-codefresh/multi-service-argo-rollouts-example/interest
+module github.com/aperture-sci/loan-app/interest
 
 go 1.16

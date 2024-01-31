@@ -1,3 +1,3 @@
-module github.com/kostis-codefresh/multi-service-argo-rollouts-example/loan
+module github.com/aperture-sci/loan-app/loan
 
 go 1.16

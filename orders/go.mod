@@ -1,3 +1,3 @@
-module github.com/kostis-codefresh/multi-service-argo-rollouts-example/order
+module github.com/aperture-sci/loan-app/order
 
 go 1.16

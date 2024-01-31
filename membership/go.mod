@@ -1,3 +1,3 @@
-module github.com/kostis-codefresh/multi-service-argo-rollouts-example/Membership
+module github.com/aperture-sci/loan-app/Membership
 
 go 1.16
