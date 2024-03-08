@@ -1,1 +1,2 @@
 ord('A')
+type('hello')
