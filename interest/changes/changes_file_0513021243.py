@@ -1,1 +1,2 @@
 help(print)
+dir('hello')
