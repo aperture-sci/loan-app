@@ -1,2 +1,0 @@
-list('Python')
-type('hello')
