@@ -1,2 +1,0 @@
-ord('A')
-help(print)
