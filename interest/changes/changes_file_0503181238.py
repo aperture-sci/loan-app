@@ -1,2 +1,0 @@
-type('hello')
-help(print)
