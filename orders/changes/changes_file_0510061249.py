@@ -1,2 +1,0 @@
-list('Python')
-ord('A')
