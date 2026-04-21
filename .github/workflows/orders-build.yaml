@@ -11,6 +11,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./orders
     env:
       # Recommended to use GitHub secrets for sensitive information
       OCTOPUS_URL: ${{ vars.OCTOPUS_SERVER_URL }}
