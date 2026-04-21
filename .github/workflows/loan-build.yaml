@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - loan/
+      - loan/**
   workflow_dispatch:
 
 jobs:
