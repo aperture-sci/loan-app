@@ -1,4 +1,4 @@
-name: Build color container
+name: Build Interest container
 
 on:
   push:
