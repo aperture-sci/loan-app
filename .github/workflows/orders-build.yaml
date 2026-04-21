@@ -3,7 +3,7 @@ name: Build color container
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - orders/
   workflow_dispatch:
