@@ -11,6 +11,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./membership
+
     env:
       # Recommended to use GitHub secrets for sensitive information
       OCTOPUS_URL: ${{ vars.OCTOPUS_SERVER_URL }}
@@ -35,9 +39,6 @@ jobs:
     - name: Build the Docker image
       run: >
         docker buildx build --platform 'linux/amd64,linux/arm64' \
-          --build-arg COLOR=${{ env.COLOR }} \
-          --build-arg LATENCY=0 \
-          --build-arg ERROR_RATE=0 \
           --tag aperturesci/membership:${{ env.PACKAGE_VERSION }} \
           --push .
 
