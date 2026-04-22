@@ -41,12 +41,12 @@ jobs:
           --tag aperturesci/orders:${{ env.PACKAGE_VERSION }} \
           --push .
 
-    - name: Push build information to Octopus Deploy
-      uses: OctopusDeploy/push-build-information-action@v4
-      with:
-        packages: |
-          aperturesci/orders
-        version: ${{ env.PACKAGE_VERSION }}
+    # - name: Push build information to Octopus Deploy
+    #   uses: OctopusDeploy/push-build-information-action@v4
+    #   with:
+    #     packages: |
+    #       aperturesci/orders
+    #     version: ${{ env.PACKAGE_VERSION }}
 
     - name: Create Octopus Deploy Release
       uses: OctopusDeploy/create-release-action@v4
