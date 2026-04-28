@@ -18,7 +18,7 @@ jobs:
       # Recommended to use GitHub secrets for sensitive information
       OCTOPUS_URL: ${{ vars.OCTOPUS_SERVER_URL }}
       OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_API_KEY }}
-      OCTOPUS_SPACE: "WGU Corp"
+      OCTOPUS_SPACE: ${{ vars.OCTOPUS_SPACE }}
       OCTOPUS_PROJECT: "orders"
 
     steps:
