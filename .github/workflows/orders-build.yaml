@@ -57,10 +57,10 @@ jobs:
         package_version: ${{ env.PACKAGE_VERSION }}
         git_ref: 'main' # for the OD project under Version control
 
-    - name: Deploy the release
-      uses: OctopusDeploy/deploy-release-action@v4
-      with:
-        project: ${{ env.OCTOPUS_PROJECT }}
-        release_number: ${{ env.PACKAGE_VERSION }}
-        environments: |
-          Development
+    # - name: Deploy the release
+    #   uses: OctopusDeploy/deploy-release-action@v4
+    #   with:
+    #     project: ${{ env.OCTOPUS_PROJECT }}
+    #     release_number: ${{ env.PACKAGE_VERSION }}
+    #     environments: |
+    #       Development
