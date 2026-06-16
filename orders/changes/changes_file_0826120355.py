@@ -1,2 +1,0 @@
-dir('hello')
-ord('A')
