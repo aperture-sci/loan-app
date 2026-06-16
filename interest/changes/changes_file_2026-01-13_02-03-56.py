@@ -1,2 +1,0 @@
-ord('A')
-len('Hello')
